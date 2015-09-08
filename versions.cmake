@@ -76,20 +76,21 @@ if (WIN32)
   if (64bit_build)
     add_revision(python
       URL "http://www.paraview.org/files/dependencies/python+deps.tar.bz2"
-      URL_MD5 "4318b8f771eda5606d9ce7f0be9f82e1")
+      URL_MD5 4318b8f771eda5606d9ce7f0be9f82e1)
   else ()
     add_revision(python
       URL "http://www.paraview.org/files/dependencies/python+deps-x32.tar.bz2"
-      URL_MD5 "6ba441784a672e08379d23ddd61146f0")
+      URL_MD5 6ba441784a672e08379d23ddd61146f0)
   endif ()
 elseif (CROSS_BUILD_STAGE STREQUAL "CROSS")
   add_revision(python
     URL "http://www.paraview.org/files/dependencies/Python-2.7.3.tgz"
-    URL_MD5 "2cf641732ac23b18d139be077bd906cd")
+    URL_MD5 2cf641732ac23b18d139be077bd906cd)
 else()
   add_revision(python
-    URL "http://paraview.org/files/dependencies/Python-2.7.2.tgz"
-    URL_MD5 "0ddfe265f1b3d0a8c2459f5bf66894c7")
+    URL "http://paraview.org/files/dependencies/Python-2.7.10_CMake-7c46d53.tar.bz2"
+    URL_MD5 306121626bbb72a2fb79179980cac273)
+
 endif()
 
 add_revision(numpy

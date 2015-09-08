@@ -32,6 +32,15 @@ set_property(CACHE PARAVIEW_RENDERING_BACKEND
   PROPERTY
     STRINGS "OpenGL;OpenGL2")
 
+if(mpi_ENABLED AND python_ENABLED AND NOT USE_SYSTEM_python AND
+   NOT BUILD_SHARED_LIBS)
+  set(mpi4py_ARGS
+    -DPYTHON_MODULE_mpi4py.MPE_BUILD_SHARED:BOOL=OFF
+    -DPYTHON_MODULE_mpi4py.MPI_BUILD_SHARED:BOOL=OFF
+    -DPYTHON_MODULE_mpi4py.dl_BUILD_SHARED:BOOL=OFF
+  )
+endif()
+
 add_external_project(paraview
   DEPENDS_OPTIONAL
     adios boost cosmotools ffmpeg hdf5 libxml3 manta matplotlib mpi numpy png python qt4 qt5 visitbridge zlib silo cgns
@@ -65,6 +74,7 @@ add_external_project(paraview
     -DModule_vtkIOADIOS:BOOL=${adios_ENABLED}
     -DVTK_RENDERING_BACKEND:STRING=${PARAVIEW_RENDERING_BACKEND}
     ${osmesa_ARGS}
+    ${mpi4py_ARGS}
 
     # Web documentation
     -DPARAVIEW_BUILD_WEB_DOCUMENTATION:BOOL=${PARAVIEW_BUILD_WEB_DOCUMENTATION}
