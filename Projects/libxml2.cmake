@@ -8,6 +8,7 @@ add_external_project_or_use_system(
   libxml2
   CONFIGURE_COMMAND <SOURCE_DIR>/configure
                     --prefix=<INSTALL_DIR>
+                    --without-python
                     ${shared_args}
   BUILD_IN_SOURCE 1
 )
