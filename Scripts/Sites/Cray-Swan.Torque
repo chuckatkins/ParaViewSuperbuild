@@ -1,0 +1,58 @@
+#PBS -S /bin/bash
+#PBS -N PVBuildStatic
+#PBS -l nodes=1:ppn=1
+#PBS -l walltime=3:00:00
+#PBS -j oe
+
+# This is used to build ParaView on Swan, an XC30 at Cray
+
+# Validate arguments
+if [ $# -ne 1 ]
+then
+  echo "Usage: qsub $(basename $0) -F \"intel|gnu|pgi|cray\""
+  exit 1
+fi
+COMP=$1
+
+. /opt/modules/default/init/bash
+
+# Start with a pristine environment
+module purge
+module load modules
+module load craype
+module load alps
+
+# Load the compilers
+module load PrgEnv-${COMP}
+module load craype-haswell
+
+# Make sure the compiler vars contain the full path to the cray wrappers
+export CC=$(which cc)
+export CXX=$(which CC)
+export FC=$(which ftn)
+
+# Load the Cray-provided libraries
+module load cray-hdf5
+module load cray-libsci
+module load cray-mpich
+
+# Used by the CMake FindHDF5.cmake module
+export HDF5_ROOT=${HDF5_DIR}
+
+# Run the build steps
+SOURCE_DIR=${HOME}/Code/ParaView/superbuild/source
+BUILD_DIR=${HOME}/Code/ParaView/superbuild/build/static-static/${COMP}
+INSTALL_DIR=${HOME}/Code/ParaView/superbuild/install/static-static/${COMP}
+
+aprun /bin/bash -c " \
+mkdir -p ${BUILD_DIR} && \
+cd ${BUILD_DIR} && \
+$HOME/Code/CMake/build/current/bin/cmake \
+  -C${SOURCE_DIR}/CMake/Sites/Cray-Swan.cmake \
+  -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR} \
+  ${SOURCE_DIR} && \
+make && \
+make install \
+"
+
+echo "Build complete"
