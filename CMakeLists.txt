@@ -69,6 +69,16 @@ elseif (WIN32)
 endif()
 
 #-----------------------------------------------------------------------------
+# Allow *NIX platforms to restrict dependencies to static libraries
+if(UNIX)
+  option(WITH_STATIC_DEPENDENCIES
+    "Restrict dependency searching to only look for static libraries" ON)
+  if(WITH_STATIC_DEPENDENCIES)
+    set(CMAKE_FIND_LIBRARY_SUFFIXES ${CMAKE_STATIC_LIBRARY_SUFFIX})
+  endif()
+endif()
+
+#-----------------------------------------------------------------------------
 # Cross compilation
 set (CROSS_BUILD_STAGE "HOST" CACHE STRING
   "Cross compilation stage: either HOST(ie no crosscompile)|TOOLS|CROSS")
